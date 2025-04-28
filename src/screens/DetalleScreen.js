@@ -4,7 +4,6 @@ import TabNavigator from '../../TabNavigator'; // Asegúrate de que la ruta sea 
 
 const DetalleScreen = ({ route }) => {
   const { therapyId } = route.params; // Recibe el ID de la terapia desde HomeScreen
-  console.log(therapy)
   const [therapy, setTherapy] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -46,10 +45,8 @@ const DetalleScreen = ({ route }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Foto de tipo terapia */}
         <View style={styles.therapyHeader}>
-          <Image 
-            source={therapy.image ? { uri: therapy.image } : require('../../assets/avatar1.png')} 
-            style={styles.therapyImage} 
-          />
+        <Image source={therapy.imagen ? { uri: therapy.imagen } : require('../../assets/avatar1.png')} style={styles.therapyImage} />
+
           <Text style={styles.therapyName}>{therapy.tituloterapia}</Text>
         </View>
 

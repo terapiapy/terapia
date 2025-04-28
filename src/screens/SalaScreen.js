@@ -1,73 +1,91 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { mediaDevices, RTCPeerConnection, RTCView } from 'react-native-webrtc';
-import io from 'socket.io-client';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import { ProgressBar, Colors } from 'react-native-paper';
 
-// Configuración del servidor de señalización
-const socket = io('https://tu-servidor-socket.io');
-
-const configuration = {
-  iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-};
-
-const SalaScreen = () => {
-  const [stream, setStream] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
-  const peerConnection = useRef(new RTCPeerConnection(configuration));
-
-  useEffect(() => {
-    startCall();
-    socket.on('offer', handleOffer);
-    socket.on('answer', handleAnswer);
-    socket.on('ice-candidate', handleICECandidate);
-    return () => peerConnection.current.close();
-  }, []);
-
-  const startCall = async () => {
-    const localStream = await mediaDevices.getUserMedia({ video: true, audio: true });
-    setStream(localStream);
-    localStream.getTracks().forEach(track => peerConnection.current.addTrack(track, localStream));
-
-    peerConnection.current.ontrack = event => setRemoteStream(event.streams[0]);
-    peerConnection.current.onicecandidate = event => event.candidate && socket.emit('ice-candidate', event.candidate);
-    
-    const offer = await peerConnection.current.createOffer();
-    await peerConnection.current.setLocalDescription(offer);
-    socket.emit('offer', offer);
-  };
-
-  const handleOffer = async offer => {
-    await peerConnection.current.setRemoteDescription(offer);
-    const answer = await peerConnection.current.createAnswer();
-    await peerConnection.current.setLocalDescription(answer);
-    socket.emit('answer', answer);
-  };
-
-  const handleAnswer = async answer => {
-    await peerConnection.current.setRemoteDescription(answer);
-  };
-
-  const handleICECandidate = async candidate => {
-    await peerConnection.current.addIceCandidate(candidate);
-  };
-
+const SalaScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      {stream && <RTCView streamURL={stream.toURL()} style={styles.video} />}
-      {remoteStream && <RTCView streamURL={remoteStream.toURL()} style={styles.video} />}
-      <TouchableOpacity style={styles.button} onPress={() => peerConnection.current.close()}>
-        <Text style={styles.buttonText}>Finalizar Llamada</Text>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaProvider>
+      <ImageBackground
+        source={require('../../assets/img3.png')}
+        style={styles.container}
+      >
+        <SafeAreaView style={styles.innerContainer}>
+          <View style={styles.content}>
+            <Text style={styles.title}>
+              Accede desde cualquier lugar
+            </Text>
+            <Text style={styles.parrafo}>
+              Conectate desde la comodidad de tu hogar, tu 
+              oficina o cualquier otro lugar.
+            </Text>
+            <ProgressBar progress={0.66}  style={styles.progressBar} />
+            <TouchableOpacity style={styles.boton} onPress={() => navigation.navigate('ThreeScreen')}>
+              <Text style={styles.botonText}>Continuar</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </ImageBackground>
+    </SafeAreaProvider>
   );
 };
 
-// Estilos
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000' },
-  video: { width: '100%', height: '50%' },
-  button: { backgroundColor: 'red', padding: 15, borderRadius: 10, marginTop: 20 },
-  buttonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  container: {
+    flex: 1,
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  content: {
+    width: '100%',
+    height: '50%',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    padding: 16,
+  },
+  title: {
+    textAlign: 'center',
+    fontFamily: 'Roboto',
+    fontSize: 25,
+    fontWeight: '400',
+    lineHeight: 36,
+    color: '#1C1B20',
+    marginTop: 30
+  },
+  parrafo: {
+    textAlign: 'center',
+    marginVertical: 8,
+    fontFamily: 'Roboto',
+    fontSize: 14,
+    fontWeight: '400',
+    lineHeight: 20,
+    letterSpacing: 0.25,
+    color: '#78767A',
+    marginBottom: 25,
+    marginTop:5
+  },
+  progressBar: {
+    marginVertical:0, // Ajusta el espacio según sea necesario
+    color: '#5D5791',
+  },
+  boton: {
+    
+    margin: 60,
+    backgroundColor: '#5D5791',
+    padding: 10,
+    borderRadius: 20,
+    width: 199,
+    height: 40,
+  },
+  botonText: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });
 
 export default SalaScreen;

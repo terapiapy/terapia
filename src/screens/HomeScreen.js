@@ -22,25 +22,26 @@ const HomeScreen = ({ navigation }) => {
       }
 
       const formattedSessions = data.sesionesProximas.map((session) => {
+        if (!session.idreserva || !session.idreserva.idespecialista || !session.idreserva.idhorario) {
+          console.warn('Reserva incompleta en sesión:', session._id);
+          return null; // O devolver un objeto vacío si quieres manejarlo diferente
+        }
+      
         const especialista = session.idreserva.idespecialista;
         const horario = session.idreserva.idhorario;
-       
-
+      
         return {
           id: session._id,
-          name: `${especialista.nombresespecialista}`, 
-          lastname: `${especialista.apellidosespecialista}`,
+          name: especialista.nombresespecialista,
+          lastname: especialista.apellidosespecialista,
           specialty: especialista.especialidad || "Especialidad no disponible",
           date: horario.fecha || "Fecha no disponible",
           time: horario.hora || "Hora no disponible",
-          image: especialista.foto && especialista.foto.includes('http')
-            ? { uri: especialista.foto } 
-            : require('../../assets/avatar1.png'), // Imagen local si no es URL válida
-          //image: especialista.foto ? { uri: especialista.foto } : require('../../assets/avatar1.png'),
+          image: especialista.foto ? { uri: especialista.foto } : require('../../assets/avatar1.png'),
           price: session.idreserva.monto || "Precio no disponible",
           rating: especialista.rating || "Sin calificación",
         };
-      });
+      }).filter(session => session !== null); // Esto elimina los nulos
 
       setSessions(formattedSessions);
     } catch (error) {
@@ -60,7 +61,7 @@ const HomeScreen = ({ navigation }) => {
         title: therapy.tituloterapia,
         description: therapy.descripcion,
         procedure: therapy.procedimiento,
-        image: therapy.imagen ? { uri: therapy.imagen } : require('../../assets/avatar1.png')
+        image: therapy.imagen && therapy.imagen.includes('http')? { uri: therapy.imagen }: require('../../assets/avatar1.png')
       }));
 
       setTherapies(formattedTherapies);
@@ -93,10 +94,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* CABECERA */}
       <View style={styles.header}>
-      <Image
-          source={require('../../assets/avatar.png')}
-          style={styles.avatar}
-      />
+        <Image source={user.foto ? { uri: user.foto } : require('../../assets/avatar.png')} style={styles.avatar} />
         <View>
           <Text style={styles.userName}>Hola, {user.nombreusuario} {user.apellido}!</Text>
           <Text style={styles.welcomeText}>Bienvenido a tu espacio terapia online.</Text>
@@ -111,31 +109,48 @@ const HomeScreen = ({ navigation }) => {
 
       {/* PRÓXIMAS SESIONES */}
       <Text style={styles.sectionTitle}>Próxima sesión</Text>
-      <FlatList horizontal data={sessions} keyExtractor={(item) => item.id} 
-          renderItem={({ item }) => (
+      {sessions.length === 0 ? (
+        // Si no hay sesiones, mostramos este card con el mensaje y el botón de "Buscar"
+        <View style={styles.card}>
+          <Text style={styles.noSessionsText}>No tienes sesiones</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Sesiones')}
-            style={styles.card}
+            style={styles.searchButton}
+            onPress={() => navigation.navigate('Buscar')}
           >
-            <View style={styles.cardImageContainer}>
-              <Image 
-                source={item.image} 
-                style={styles.cardImage} 
-              />
-            </View>
-            <View style={styles.cardInfo}>
-              <Text style={styles.cardName}>{item.name}</Text>
-              <Text style={styles.cardName}>{item.lastname}</Text>
-              <Text style={styles.cardSpecialty}>{item.specialty}</Text>
-              <Text style={styles.cardPrice}>{item.date} - {item.time}</Text>
-            </View>
-            <View style={styles.cardRatingContainer}>
-              <Text style={styles.cardRating}>{item.rating}</Text>
-              <Ionicons name="star" size={20} color="#FFD700" />
-            </View>
+            <Text style={styles.searchButtonText}>Buscar</Text>
           </TouchableOpacity>
-        )}
-      />
+        </View>
+      ) : (
+        // Si hay sesiones, mostramos la lista de sesiones
+        <FlatList 
+          horizontal 
+          data={sessions} 
+          keyExtractor={(item) => item.id.toString()} 
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Sesiones')}
+              style={styles.card}
+            >
+              <View style={styles.cardImageContainer}>
+                <Image 
+                  source={item.image} 
+                  style={styles.cardImage} 
+                />
+              </View>
+              <View style={styles.cardInfo}>
+                <Text style={styles.cardName}>{item.name}</Text>
+                <Text style={styles.cardName}>{item.lastname}</Text>
+                <Text style={styles.cardSpecialty}>{item.specialty}</Text>
+                <Text style={styles.cardPrice}>{item.date} - {item.time}</Text>
+              </View>
+              <View style={styles.cardRatingContainer}>
+                <Text style={styles.cardRating}>{item.rating}</Text>
+                <Ionicons name="star" size={20} color="#FFD700" />
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      )}
 
       {/* TIPOS DE TERAPIA */}
       <Text style={styles.sectionTitle}>Tipos de terapia</Text>
@@ -148,8 +163,7 @@ const HomeScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('Detalle', { therapyId: item.id })} // Pasar el ID de la terapia
             style={styles.therapyCard}
           >
-            <Image source={typeof item.image === 'string' && item.image.length > 0 ? { uri: item.image } 
-              : require('../../assets/avatar1.png')} style={styles.therapyIcon} />
+            <Image source={item.image} style={styles.therapyIcon} />
           </TouchableOpacity>
         )}
       />
@@ -220,8 +234,24 @@ const styles = StyleSheet.create({
     borderColor: '#5D5791',
     borderRadius: 8,
     padding: 10,
-    alignItems: 'center', // Aseguramos que los elementos de la tarjeta estén alineados correctamente
-    backgroundColor: '#E4DFFF', // Puedes ajustar el color de fondo si es necesario
+    alignItems: 'center', 
+    backgroundColor: '#E4DFFF', 
+  },
+  noSessionsText: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  searchButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  searchButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    textAlign: 'center',
   },
   cardImageContainer: {
     marginRight: 10,
@@ -266,8 +296,8 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   therapyIcon: { 
-    width: 79, 
-    height: 83, 
+    width: 93, 
+    height: 93, 
     borderRadius: 25 
   },
   therapyTitle: { 

@@ -3,32 +3,36 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Button, Ac
 import { Ionicons } from '@expo/vector-icons';
 
 const DetalleEspecialistaScreen = ({ route, navigation }) => {
-  const { id } = route.params;
+  const { idEspecialista } = route.params;
   const [therapist, setTherapist] = useState(null);
   const [horarios, setHorarios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedHorario, setSelectedHorario] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Datos del especialista
-        const resEspecialista = await fetch(`https://apisterapia.onrender.com/api/especialistas/porid/${id}`);
+        const resEspecialista = await fetch(`https://apisterapia.onrender.com/api/especialistas/porid/${idEspecialista}`);
         const dataEspecialista = await resEspecialista.json();
+        console.log('Datos de Especialista:', dataEspecialista); 
         setTherapist(dataEspecialista);
 
         // Horarios disponibles
-        const resHorarios = await fetch(`https://apisterapia.onrender.com/api/horarios/especialista/${id}`);
+        const resHorarios = await fetch(`https://apisterapia.onrender.com/api/horarios/especialista/${idEspecialista}`);
         const dataHorarios = await resHorarios.json();
+        console.log('Datos de Horarios:', dataHorarios); // Aquí imprimimos los horarios
         setHorarios(dataHorarios);
       } catch (error) {
         console.error('Error al cargar los datos:', error);
+        
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [id]);
+  }, [idEspecialista]);
 
   if (loading) {
     return (
@@ -51,9 +55,9 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
         {/* Cabecera */}
         <View style={styles.header}>
-          <Image source={{ uri: therapist.imagen }} style={styles.headerImage} />
+          <Image source={{ uri: therapist.foto }} style={styles.headerImage} />
           <View style={styles.headerTextContainer}>
-            <Text style={styles.headerName}>{therapist.nombres} {therapist.apellidos}</Text>
+            <Text style={styles.headerName}>{therapist.nombresespecialista} {therapist.apellidosespecialista}</Text>
           </View>
         </View>
 
@@ -61,11 +65,11 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Precio</Text>
-            <Text style={styles.cardValue}>${therapist.precio || 'N/A'}</Text>
+            <Text style={styles.cardValue}>Gs.{therapist.precio || 'N/A'}</Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Duración</Text>
-            <Text style={styles.cardValue}>60 minutos</Text>
+            <Text style={styles.cardValue}>{therapist.experiencia || '60'} minutos</Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Puntuación</Text>
@@ -82,7 +86,7 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
 
         {/* Biografía */}
         <Text style={styles.sectionTitle}>Biografía</Text>
-        <Text style={styles.bio}>{therapist.descripcion || 'Sin descripción disponible.'}</Text>
+        <Text style={styles.bio}>{therapist.biografia || 'Sin descripción disponible.'}</Text>
 
         {/* Fechas disponibles dinámicas */}
         <View style={styles.availableDatesContainer}>
@@ -94,36 +98,43 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {/* Botones de fechas dinámicos */}
         <View style={styles.buttonsContainer}>
           {horarios.map((item, index) => (
-            <Button
-              key={index}
-              title={`${item.dia} ${item.fecha}`}
-              onPress={() => console.log(`Seleccionado: ${item.fecha}`)}
-            />
-          ))}
-        </View>
-
-        {/* Horarios disponibles dinámicos */}
-        <Text style={styles.sectionTitle}>Horarios disponibles</Text>
-        <View style={styles.timeSlotsContainer}>
-          {horarios.map((item, index) => (
-            <View key={index} style={styles.timeSlot}>
-              <Text style={styles.timeSlotText}>{item.hora}</Text>
+            <View key={index} style={{ marginBottom: 10 }}>
+              <Button
+                title={`${item.dia} ${item.fecha.slice(0, 2)}`}
+                onPress={() => setSelectedHorario(item)}
+              />
+              <Button
+                title={`${item.hora}`}
+                onPress={() => setSelectedHorario(item)}
+                color="#5D5791" // Puedes cambiar el color para diferenciar
+              />
             </View>
           ))}
         </View>
+
+        
       </ScrollView>
 
       {/* Pie de página */}
       <View style={styles.footer}>
         <TouchableOpacity 
           style={styles.bookButton} 
-          onPress={() => navigation.navigate('Reserva')}
+          onPress={() => {
+            if (selectedHorario) {
+              navigation.navigate('Reserva', { 
+                idEspecialista,
+                idHorario: selectedHorario._id
+              });
+            } else {
+              alert('Por favor selecciona un horario primero.');
+            }
+          }}
         >
           <Text style={styles.bookButtonText}>Agendar cita</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );

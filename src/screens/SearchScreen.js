@@ -50,10 +50,7 @@ const SearchScreen = ({ navigation }) => {
             onPress={() => navigation.navigate('Detalle Especialista', { idEspecialista: item._id })}
           >
             <View style={styles.cardImageContainer}>
-              <Image 
-                source={require('../../assets/esp1.png')} // Puedes cambiar esto si luego usas fotos reales
-                style={styles.cardImage} 
-              />
+              <Image source={item.foto ? { uri: item.foto } : require('../../assets/avatar1.png')} style={styles.cardImage} />
             </View>
             <View style={styles.cardInfo}>
               <Text style={styles.cardName}>{item.nombresespecialista}</Text>
