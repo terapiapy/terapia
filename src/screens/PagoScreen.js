@@ -1,15 +1,51 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const PagoScreen = ({ navigation, route }) => {
-  //const { therapist, date, time, duration, price } = route.params;
-  const [therapist, setTherapists] = useState([
-        { id: '1', date: '03/10/2024', duration: '1 hora', time: '09:30', name: 'Maria Carolina', lastname: 'Pereira Colman', specialty: 'Psicóloga', price: '50$', rating: 4.5, image: require('../../assets/esp1.png') },
-        { id: '2', date: '03/10/2024', duration: '1 hora', time: '09:30', name: 'Juan Pérez', lastname: 'González', specialty: 'Psicoterapeuta', price: '40$', rating: 4.2, image: require('../../assets/esp1.png') },
-        { id: '3', date: '03/10/2024', duration: '1 hora', time: '09:30', name: 'Ana López', lastname: 'Gutiérrez', specialty: 'Psicóloga Clínica', price: '60$', rating: 4.8, image: require('../../assets/esp1.png') },
-        { id: '4', date: '03/10/2024', duration: '1 hora', time: '09:30', name: 'Carlos Martínez', lastname: 'Rivas', specialty: 'Psiquiatra', price: '70$', rating: 4.3, image: require('../../assets/esp1.png') },
-      ]);
+  const { reserva } = route.params; // recibimos la reserva
+  const [sesion, setSesion] = useState(null);
+
+  // Crear sesión al cargar la pantalla
+  useEffect(() => {
+    const crearSesion = async () => {
+      try {
+        const response = await fetch('https://apisterapia.onrender.com/api/sesiones/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            idusuario: reserva.idusuario,
+            idespecialista: reserva.idespecialista,
+            idhorario: reserva.idhorario,
+            idreserva: reserva._id,
+          }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          console.log('✅ Sesión creada:', data.sesion);
+          setSesion(data.sesion); // guardamos la sesión creada
+        } else {
+          console.error('❌ Error al crear sesión:', data.error);
+        }
+      } catch (error) {
+        console.error('🔥 Error en crearSesion:', error.message);
+      }
+    };
+
+    crearSesion();
+  }, [reserva]);
+
+  if (!sesion) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>Creando tu cita...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {/* Cabecera */}
@@ -17,34 +53,42 @@ const PagoScreen = ({ navigation, route }) => {
         <Text style={styles.title}>Pago Exitoso</Text>
         <Ionicons name="checkmark-circle" size={80} color="green" />
       </View>
-      
+
       {/* Mensaje */}
       <Text style={styles.message}>Tu pago ha sido procesado con éxito.</Text>
 
       {/* Especialista */}
-      <Text style={styles.therapistName}>{therapist.name} {therapist.lastname}</Text>
+      <Text style={styles.therapistName}>Especialista ID: {sesion.idespecialista}</Text>
 
       {/* Detalles de la cita */}
       <View style={styles.card}>
         <View style={styles.row}>
-          <View style={styles.column}><Text style={styles.label}>Fecha:</Text><Text style={styles.value}>{therapist.date}</Text></View>
-          <View style={styles.column}><Text style={styles.label}>Hora:</Text><Text style={styles.value}>{therapist.time}</Text></View>
+          <View style={styles.column}>
+            <Text style={styles.label}>Fecha:</Text>
+            <Text style={styles.value}>{sesion.fecha || 'Por confirmar'}</Text>
+          </View>
+          <View style={styles.column}>
+            <Text style={styles.label}>Hora:</Text>
+            <Text style={styles.value}>{sesion.hora || 'Por confirmar'}</Text>
+          </View>
         </View>
         <View style={styles.row}>
-          <View style={styles.column}><Text style={styles.label}>Duración:</Text><Text style={styles.value}>{therapist.duration}</Text></View>
-          <View style={styles.column}><Text style={styles.label}>Precio:</Text><Text style={styles.value}>{therapist.price}</Text></View>
+          <View style={styles.column}>
+            <Text style={styles.label}>Precio:</Text>
+            <Text style={styles.value}>{reserva.monto ? `$${reserva.monto}` : 'No disponible'}</Text>
+          </View>
         </View>
       </View>
-
-      {/* Espacio en blanco */}
-      <View style={styles.spacer} />
 
       {/* Botones */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>Volver</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.primaryButton]} onPress={() => navigation.navigate('')}>
+        <TouchableOpacity
+          style={[styles.button, styles.primaryButton]}
+          onPress={() => navigation.navigate('DetalleCita', { sesion })}
+        >
           <Text style={styles.buttonText}>Ver Cita</Text>
         </TouchableOpacity>
       </View>
