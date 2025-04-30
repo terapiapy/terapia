@@ -26,7 +26,7 @@ const SessionsScreen = () => {
             duration: '1 hora',
             price: `${item.idreserva.monto}$`,
             therapistName: `${item.idreserva.idespecialista.nombresespecialista} ${item.idreserva.idespecialista.apellidosespecialista}`,
-            therapistImage: require('../../assets/esp1.png'), // Sustituye si luego hay una URL válida
+            therapistImage: item.idreserva.idespecialista.foto ? { uri: item.idreserva.idespecialista.foto } : require('../../assets/avatar1.png'),
             fullData: item
           };
         });
@@ -98,7 +98,7 @@ const SessionsScreen = () => {
               {filter === 'upcoming' && (
                 <TouchableOpacity
                   style={styles.startButton}
-                  onPress={() => navigation.navigate('Detalle Sesión', { session: item.fullData })}
+                  onPress={() => navigation.navigate('Detalle Sesión', { idsesion: item.id })}
                 >
                   <Text style={styles.startButtonText}>Iniciar</Text>
                 </TouchableOpacity>
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   startButton: {
     marginTop: 10,
-    backgroundColor: '#28A745',
+    backgroundColor: '#5D5791',
     paddingVertical: 8,
     borderRadius: 5,
     alignItems: 'center',

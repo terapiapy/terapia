@@ -1,17 +1,67 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 
 const DetalleSesionScreen = ({ route, navigation }) => {
-  // Obtener los datos de la sesión desde la navegación
-  //const { therapistName, therapistImage, date, time, duration, price, modality, paymentMethod } = route.params;
-  const esp= [{ id: '4', date: '2025-03-28', time: '08:00', duration: '1 hora', price: '50$', therapistName: 'Maria Carolina Pereira', therapistImage: require('../../assets/esp1.png'), paymentMethod: 'Tarjeta' }];
- 
+  const { idsesion } = route.params;
+  const [sesion, setSesion] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSesion = async () => {
+      try {
+        const response = await fetch(`https://apisterapia.onrender.com/api/sesiones/${idsesion}`);
+        const data = await response.json();
+        if (response.ok) {
+          setSesion(data);
+        } else {
+          console.error('Error al obtener la sesión:', data.error);
+        }
+      } catch (error) {
+        console.error('Error de red:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSesion();
+  }, [idsesion]);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="green" />
+        <Text>Cargando detalles de la sesión...</Text>
+      </View>
+    );
+  }
+
+  if (!sesion) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ color: 'red' }}>No se pudo cargar la información de la sesión.</Text>
+      </View>
+    );
+  }
+
+  const especialista = sesion.idreserva?.idespecialista;
+  const horario = sesion.idreserva?.idhorario;
+  const usuario = sesion.idreserva?.idusuario;
+
   return (
     <View style={styles.container}>
       {/* Cabecera */}
       <View style={styles.header}>
-        <Image source={esp.therapistImage} style={styles.therapistImage} />
-        <Text style={styles.therapistName}>{esp.therapistName}</Text>
+        <Image
+          source={
+            especialista?.foto
+              ? { uri: especialista.foto }
+              : require('../../assets/avatar1.png')
+          }
+          style={styles.therapistImage}
+        />
+        <Text style={styles.therapistName}>
+          {especialista?.nombresespecialista} {"\n"}{especialista?.apellidosespecialista}
+        </Text>
       </View>
 
       {/* Descripción */}
@@ -20,16 +70,19 @@ const DetalleSesionScreen = ({ route, navigation }) => {
       {/* Información de la Cita */}
       <Text style={styles.sectionTitle}>Información de la Cita</Text>
       <View style={styles.card}>
-        <Text style={styles.cardText}>📅 Fecha: {esp.date}</Text>
-        <Text style={styles.cardText}>⏰ Hora: {esp.time}</Text>
-        <Text style={styles.cardText}>⏳ Duración: {esp.duration}</Text>
-        <Text style={styles.cardText}>💰 Precio: {esp.price}</Text>
-        <Text style={styles.cardText}>🖥️ Modalidad: {esp.modality}</Text>
-        <Text style={styles.cardText}>💳 Forma de Pago: {esp.paymentMethod}</Text>
+        <Text style={styles.cardText}>📅 Fecha: {horario?.fecha}</Text>
+        <Text style={styles.cardText}>⏰ Hora: {horario?.hora}</Text>
+        <Text style={styles.cardText}>⏳ Duración: 1 hora</Text>
+        <Text style={styles.cardText}>💰 Precio: ${sesion.idreserva?.monto}</Text>
+        <Text style={styles.cardText}>🖥️ Modalidad: Online</Text>
+        <Text style={styles.cardText}>💳 Forma de Pago: {sesion.idreserva?.metodopago}</Text>
       </View>
 
       {/* Botón para entrar a la sesión */}
-      <TouchableOpacity style={styles.enterButton}  onPress={() => navigation.navigate('Final Sesión')}>
+      <TouchableOpacity
+        style={styles.enterButton}
+        onPress={() => navigation.navigate('Final Sesión')}
+      >
         <Text style={styles.enterButtonText}>Entrar</Text>
       </TouchableOpacity>
 
@@ -84,9 +137,9 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   enterButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#5D5791',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -96,13 +149,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cancelButton: {
-    backgroundColor: '#d9534f',
+    backgroundColor: '#FCF8FF',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: 'center',
+    borderColor:'#5D5791',
+    borderWidth: 1,  
   },
   cancelButtonText: {
-    color: '#fff',
+    color: '#5D5791',
     fontSize: 18,
     fontWeight: 'bold',
   },

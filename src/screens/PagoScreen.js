@@ -26,18 +26,32 @@ const PagoScreen = ({ navigation, route }) => {
         const data = await response.json();
         if (response.ok) {
           console.log('✅ Sesión creada:', data.sesion);
-          setSesion(data.sesion); // guardamos la sesión creada
+  
+          // Paso 2: Obtener la sesión con populate
+          const sesionResponse = await fetch(`https://apisterapia.onrender.com/api/sesiones/${data.sesion._id}`);
+          const sesionCompleta = await sesionResponse.json();
+  
+          console.log('📥 Sesión completa:', sesionCompleta);
+  
+          if (sesionResponse.ok) {
+            setSesion(sesionCompleta); // guardamos la sesión con datos poblados
+          } else {
+            console.error('❌ Error al obtener sesión completa:', sesionCompleta.error);
+          }
         } else {
           console.error('❌ Error al crear sesión:', data.error);
         }
       } catch (error) {
         console.error('🔥 Error en crearSesion:', error.message);
       }
+      console.log(reserva);
     };
 
     crearSesion();
   }, [reserva]);
-
+  const especialista = sesion?.idreserva?.idespecialista;
+  const horario = sesion?.idreserva?.idhorario;
+  const monto = sesion?.idreserva?.monto;
   if (!sesion) {
     return (
       <View style={styles.container}>
@@ -51,31 +65,33 @@ const PagoScreen = ({ navigation, route }) => {
       {/* Cabecera */}
       <View style={styles.header}>
         <Text style={styles.title}>Pago Exitoso</Text>
-        <Ionicons name="checkmark-circle" size={80} color="green" />
+        <Ionicons name="checkmark-circle" size={80} color="#5D5791" />
       </View>
 
       {/* Mensaje */}
       <Text style={styles.message}>Tu pago ha sido procesado con éxito.</Text>
 
       {/* Especialista */}
-      <Text style={styles.therapistName}>Especialista ID: {sesion.idespecialista}</Text>
+      <Text style={styles.therapistName}>
+          Especialista:{"\n"} {especialista?.nombresespecialista} {especialista?.apellidosespecialista}
+      </Text>
 
       {/* Detalles de la cita */}
       <View style={styles.card}>
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>Fecha:</Text>
-            <Text style={styles.value}>{sesion.fecha || 'Por confirmar'}</Text>
+            <Text style={styles.value}>{horario?.fecha}</Text>
           </View>
           <View style={styles.column}>
             <Text style={styles.label}>Hora:</Text>
-            <Text style={styles.value}>{sesion.hora || 'Por confirmar'}</Text>
+            <Text style={styles.value}>{horario?.hora}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.column}>
             <Text style={styles.label}>Precio:</Text>
-            <Text style={styles.value}>{reserva.monto ? `$${reserva.monto}` : 'No disponible'}</Text>
+            <Text style={styles.value}>${monto}</Text>
           </View>
         </View>
       </View>
@@ -87,7 +103,7 @@ const PagoScreen = ({ navigation, route }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.primaryButton]}
-          onPress={() => navigation.navigate('DetalleCita', { sesion })}
+          onPress={() => navigation.navigate('Detalle Sesión', { idsesion: sesion._id })}
         >
           <Text style={styles.buttonText}>Ver Cita</Text>
         </TouchableOpacity>
@@ -99,7 +115,7 @@ const PagoScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', padding: 20, backgroundColor: '#fff' },
   header: { alignItems: 'center', marginBottom: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', color: 'green' },
+  title: { fontSize: 24, fontWeight: 'bold', color: '#5D5791' },
   message: { fontSize: 16, textAlign: 'center', marginVertical: 10 },
   therapistName: { fontSize: 20, fontWeight: 'bold', marginVertical: 10 },
   card: { width: '100%', padding: 20, backgroundColor: '#f8f8f8', borderRadius: 10, marginBottom: 20 },
@@ -108,9 +124,10 @@ const styles = StyleSheet.create({
   label: { fontSize: 16, fontWeight: 'bold' },
   value: { fontSize: 16, color: '#555' },
   spacer: { height: 50 },
+  therapistName: { fontSize: 18, fontWeight: 'bold', textAlign: 'center',},
   buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
   button: { flex: 1, padding: 15, backgroundColor: '#ccc', borderRadius: 8, alignItems: 'center', marginHorizontal: 5 },
-  primaryButton: { backgroundColor: 'green' },
+  primaryButton: { backgroundColor: '#5D5791' },
   buttonText: { fontSize: 16, color: '#fff', fontWeight: 'bold' },
 });
 

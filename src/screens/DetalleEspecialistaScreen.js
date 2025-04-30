@@ -57,7 +57,7 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
         <View style={styles.header}>
           <Image source={{ uri: therapist.foto }} style={styles.headerImage} />
           <View style={styles.headerTextContainer}>
-            <Text style={styles.headerName}>{therapist.nombresespecialista} {therapist.apellidosespecialista}</Text>
+            <Text style={styles.headerName}>{therapist.nombresespecialista} {"\n"}{therapist.apellidosespecialista}</Text>
           </View>
         </View>
 

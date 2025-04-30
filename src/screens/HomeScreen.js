@@ -258,11 +258,12 @@ const styles = StyleSheet.create({
     marginBottom:5,
   },
   cardImage: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 40,
   },
   cardInfo: {
+    width:'60%',
     flex: 1,
   },
   cardName: {
@@ -271,6 +272,7 @@ const styles = StyleSheet.create({
     marginBottom: 2, // Agrega un poco de espacio entre el nombre y la especialidad
   },
   cardSpecialty: {
+    width:'60%',
     fontSize: 16,
     color: '#5D5791',
     marginBottom: 2, // Agrega espacio para que no se vea amontonado
