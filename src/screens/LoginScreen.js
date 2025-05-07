@@ -67,7 +67,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.form}>
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder="Correo electrónico"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -83,17 +83,17 @@ const LoginScreen = ({ navigation }) => {
           </View>
 
           {/* Enlaces y botones */}
-          <TouchableOpacity onPress={() => navigation.navigate('Olvido')}>
-            <Text style={styles.link}>¿Olvidaste tu contraseña?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Olvide mi contraseña')}>
+            <Text style={styles.link1}>Ólvide mi contraseña</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.boton} onPress={handleLogin} disabled={loading}>
-            <Text style={styles.botonText}>{loading ? 'Cargando...' : 'Continuar'}</Text>
+            <Text style={styles.botonText}>{loading ? 'Iniciando...' : 'Iniciar Sesión'}</Text>
           </TouchableOpacity>
 
 
           <TouchableOpacity onPress={() => navigation.navigate('RegistroScreen')}>
-            <Text style={styles.link}>¿No tienes cuenta? Regístrate</Text>
+            <Text style={styles.link2}>¿No tienes cuenta?  Regístrate</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -103,85 +103,113 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  header: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  logoTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logov: {
-    width: 74,
-    height: 105,
-    marginRight: 8,
-  },
-  headerTexte: {
-    color: '#5D5791',
-    fontFamily: 'eurofurence',
-    fontSize: 36,
-    fontWeight: 'bold',
-  },
-  headerTexto: {
-    color: '#E4DFFF',
-    fontFamily: 'Roboto',
-    fontSize: 24,
-    fontWeight: '500',
-    marginTop: 4,
-  },
+      width: 375,
+      height: 812,
+      backgroundColor: '#FFF',
+    },
+    header: {
+      alignItems: 'center', // ✅ Centra los elementos
+      justifyContent: 'center',
+      margin: 30
+    },
+    logoTextContainer: {
+      marginTop:35,
+      flexDirection: 'row', // ✅ Logo y "erapia" en la misma línea
+      alignItems: 'center', // ✅ Alinear verticalmente
+    },
+    logov: {
+      width: 74,
+      height: 105,
+      marginRight: -15, // ✅ Espacio entre logo y texto
+    },
+    headerTexte: {
+      marginTop:-15,
+      color: '#5D5791',
+      fontFamily: 'eurofurence',
+      fontSize: 46,
+      fontWeight: '500',
+      fontStyle:'normal',
+    },
+    headerTexto: {
+      color: '#E4DFFF',
+      fontFamily: 'Roboto',
+      fontSize: 24,
+      fontWeight: '500',
+      marginTop: -35, // ✅ Espacio entre "erapia" y "Online"
+      marginLeft:125
+    },
   content: {
     flex: 1,
     width: '100%',
+    marginTop:-140,
+    padding:35,
+    margin:10,
     justifyContent: 'center',
     borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    padding: 16,
+    borderTopRightRadius: 30
   },
   title: {
     textAlign: 'center',
+    fontFamily:'Roboto',
     fontSize: 28,
+    fontStyle:'normal',
     fontWeight: '400',
     lineHeight: 36,
-    color: '#1C1B20',
+    color: '#5D5791',
   },
   parrafo: {
+    width:'80%',
+    marginTop:30,
+    marginBottom:30,
+    marginLeft:20,
     textAlign: 'center',
-    marginVertical: 8,
-    fontSize: 14,
+    fontFamily:'Roboto',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '400',
     lineHeight: 20,
-    color: '#78767A',
+    letterSpacing: 0.25,
+    color: '#78767A'
   },
   form: {
     width: '100%',
     maxWidth: 300,
     marginBottom: 10,
     alignSelf: 'center',
+    
   },
   input: {
-    width: '100%',
+    width: '95%',
     height: 45,
     borderColor: '#5D5791',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 2,
     paddingHorizontal: 10,
+    marginTop:10,
     marginBottom: 10,
   },
-  link: {
+  link1: {
     color: '#5D5791',
     textAlign: 'center',
-    marginVertical: 8,
-    textDecorationLine: 'underline',
+    marginLeft: 100, 
+    marginTop: -16,
+    marginBottom:25,
+    textDecorationLine: 'none',
+  },
+  link2: {
+    color: '#5D5791',
+    textAlign: 'center', 
+    marginLeft:-15,
+    marginTop:10,
+    textDecorationLine: 'none',
   },
   boton: {
     backgroundColor: '#5D5791',
     padding: 10,
+    marginRight:15,
     borderRadius: 20,
     alignSelf: 'center',
-    width: 199,
+    width: '95%',
   },
   botonText: {
     color: '#fff',

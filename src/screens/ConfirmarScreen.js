@@ -3,7 +3,9 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-const ConfirmarScreen = ({ navigation }) => {
+const ConfirmarScreen = ({ navigation, route }) => {
+  const { email } = route.params; // recibimos la reserva
+  console.log(email);
   const [code, setCode] = useState(['', '', '', '']);
   const inputs = useRef([]);
 
@@ -18,12 +20,34 @@ const ConfirmarScreen = ({ navigation }) => {
     }
   };
 
-  const handleVerify = () => {
-    const enteredCode = code.join('');
-    console.log('Código ingresado:', enteredCode);
-    // Aquí puedes hacer la verificación del código
-  };
+  const handleVerify = async () => {
+    try {
+      const response = await fetch('https://apisterapia.onrender.com/api/usuarios/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
 
+      const data = await response.json();
+
+      if (response.ok && data.exists) {
+        // Enviar código al correo
+        await fetch('https://apisterapia.onrender.com/api/usuarios/verify-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        Alert.alert('✅ Código enviado', 'Revisa tu correo electrónico.');
+        navigation.navigate('Confirmar', { email });
+      } else {
+        Alert.alert('❌ Error', 'El correo no está registrado.');
+      }
+    } catch (error) {
+      console.error('Error al verificar usuario:', error);
+      Alert.alert('❌ Error', 'Hubo un problema al verificar el usuario.');
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Ingresa el Código</Text>
@@ -43,12 +67,8 @@ const ConfirmarScreen = ({ navigation }) => {
         ))}
       </View>
 
-      <TouchableOpacity style={styles.boton} onPress= {() =>navigation.navigate('Resetear')}>
+      <TouchableOpacity style={styles.boton} onPress= {handleVerify}>
         <Text style={styles.botonText}>Continuar</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => console.log('Reenviar código')} style={styles.link}>
-        <Text style={styles.linkText}>Reenviar código</Text>
       </TouchableOpacity>
     </View>
   );
@@ -57,28 +77,39 @@ const ConfirmarScreen = ({ navigation }) => {
 // Estilos
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    width: 375,
+    height: 812,
+    backgroundColor: '#FFF',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1C1B20',
+    marginTop:40,
+    fontSize: 28,
+    fontWeight: '400',
+    fontFamily:'Roboto',
+    fontStyle: 'normal',
+    lineHeight: 36,
+    textAlign:'center',
+    color: '#5D5791',
   },
   subtitle: {
+    width:'70%',
+    margin:50,
+    textAlign: 'center',
+    fontFamily: 'Roboto',
     fontSize: 14,
-    color: '#78767A',
-    marginBottom: 20,
+    fontStyle:'normal',
+    fontWeight: '400',
+    lineHeight: 20,
+    letterSpacing:0.25,
+    color: '#787680',
     textAlign: 'center',
   },
   codeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '60%',
-    marginBottom: 20,
+    width: '65%',
+    margin: 50,
+    marginTop:5
   },
   input: {
     width: 50,
@@ -87,15 +118,16 @@ const styles = StyleSheet.create({
     borderColor: '#5D5791',
     textAlign: 'center',
     fontSize: 24,
-    borderRadius: 10,
+    borderRadius: 5
   },
   boton: {
     backgroundColor: '#5D5791',
     padding: 10,
+    marginTop: 0,
+    margin:40,
     borderRadius: 20,
-    width: 150,
-    alignItems: 'center',
-    marginVertical: 10,
+    width: '70%',
+    alignItems: 'center'
   },
   botonText: {
     color: '#fff',

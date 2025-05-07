@@ -64,40 +64,57 @@ const PagoScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       {/* Cabecera */}
       <View style={styles.header}>
+        <Ionicons name="checkmark-circle" size={90} color="#5D5791" />
         <Text style={styles.title}>Pago Exitoso</Text>
-        <Ionicons name="checkmark-circle" size={80} color="#5D5791" />
       </View>
 
       {/* Mensaje */}
-      <Text style={styles.message}>Tu pago ha sido procesado con éxito.</Text>
+      <Text style={styles.message}>Tu cita ha sido reservada con</Text>
 
       {/* Especialista */}
       <Text style={styles.therapistName}>
-          Especialista:{"\n"} {especialista?.nombresespecialista} {especialista?.apellidosespecialista}
+          Psic. {especialista?.nombresespecialista}{especialista?.apellidosespecialista}
       </Text>
 
       {/* Detalles de la cita */}
       <View style={styles.card}>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.label}>Fecha:</Text>
-            <Text style={styles.value}>{horario?.fecha}</Text>
-          </View>
-          <View style={styles.column}>
-            <Text style={styles.label}>Hora:</Text>
-            <Text style={styles.value}>{horario?.hora}</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.column}>
-            <Text style={styles.label}>Precio:</Text>
-            <Text style={styles.value}>${monto}</Text>
-          </View>
-        </View>
-      </View>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <View style={styles.iconLabel}>
+                    <Ionicons name="calendar-outline" size={20} color="#5D5791" />
+                    <Text style={styles.label}>Fecha</Text>
+                  </View>
+                  <Text style={styles.val}>{horario.fecha}</Text>
+                </View>
+                <View style={styles.column}>
+                  <View style={styles.iconLabel}>
+                    <Ionicons name="time-outline" size={20} color="#5D5791" />
+                    <Text style={styles.label}>Hora</Text>
+                  </View>
+                  <Text style={styles.val}>{horario.hora} hs.</Text>
+                </View>
+              </View>
+              <View style={styles.row}>
+                <View style={styles.column}>
+                  <View style={styles.iconLabel}>
+                    <Ionicons name="alarm-outline" size={20} color="#5D5791" />
+                    <Text style={styles.label}>Duración</Text>
+                  </View>
+                  <Text style={styles.val}>{especialista.experiencia} min</Text>
+                </View>
+                <View style={styles.column}>
+                  <View style={styles.iconLabel}>
+                    <Ionicons name="cash" size={20} color="#5D5791" />
+                    <Text style={styles.label}>Precio</Text>
+                  </View>
+                  <Text style={styles.val}>{especialista.precio}.000 Gs.</Text>
+                </View>
+              </View>
+            </View>
 
       {/* Botones */}
-      <View style={styles.buttonContainer}>
+      
+      <View style={styles.footer}>
         <TouchableOpacity style={styles.button} onPress={() => navigation.goBack()}>
           <Text style={styles.buttonText}>Volver</Text>
         </TouchableOpacity>
@@ -105,7 +122,7 @@ const PagoScreen = ({ navigation, route }) => {
           style={[styles.button, styles.primaryButton]}
           onPress={() => navigation.navigate('Detalle Sesión', { idsesion: sesion._id })}
         >
-          <Text style={styles.buttonText}>Ver Cita</Text>
+          <Text style={styles.buttonText1}>Ver Cita</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -113,22 +130,114 @@ const PagoScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', padding: 20, backgroundColor: '#fff' },
-  header: { alignItems: 'center', marginBottom: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#5D5791' },
-  message: { fontSize: 16, textAlign: 'center', marginVertical: 10 },
-  therapistName: { fontSize: 20, fontWeight: 'bold', marginVertical: 10 },
-  card: { width: '100%', padding: 20, backgroundColor: '#f8f8f8', borderRadius: 10, marginBottom: 20 },
-  row: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 },
-  column: { width: '45%' },
-  label: { fontSize: 16, fontWeight: 'bold' },
-  value: { fontSize: 16, color: '#555' },
-  spacer: { height: 50 },
-  therapistName: { fontSize: 18, fontWeight: 'bold', textAlign: 'center',},
-  buttonContainer: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
-  button: { flex: 1, padding: 15, backgroundColor: '#ccc', borderRadius: 8, alignItems: 'center', marginHorizontal: 5 },
-  primaryButton: { backgroundColor: '#5D5791' },
-  buttonText: { fontSize: 16, color: '#fff', fontWeight: 'bold' },
+  container: { 
+    flex: 1, 
+    alignItems: 'center', 
+    padding: 20, 
+    backgroundColor: '#fff' 
+  },
+  header: { 
+    alignItems: 'center', 
+    marginBottom: 20 
+  },
+  title: 
+  {
+    marginTop:20,
+    fontFamily:'Roboto', 
+    fontSize: 28, 
+    fontWeight: 400,
+    fontStyle: 'normal',
+    color: '#5D5791',
+    lineHeight: 36 
+  },
+  message: { 
+    fontFamily:'Roboto',
+    fontSize: 16, 
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight:24,
+    letterSpacing: 0.5,
+    textAlign: 'center', 
+    margin: 20,
+    marginTop:-15 
+  },
+  therapistName: { 
+    color: '#5D5791',
+    fontFamily: 'Roboto',
+    fontSize: 16, 
+    fontWeight: 500,
+    fontStyle: 'normal',
+    lineHeight:24,
+    letterSpacing:0.15, 
+    margin: 2 
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: '#5D5791',
+    borderRadius: 8, 
+    backgroundColor: '#ffffff', 
+    padding: 15,
+    borderRadius: 10, 
+    marginBottom: 20,
+    marginTop:10 
+  },
+  row: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    marginBottom: 10 },
+  column: { 
+    width: '48%' },
+  label: { 
+    fontFamily: 'Roboto',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 16,
+    letterSpacing: 0.4 
+  },
+  iconLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5, // Espacio entre icono y texto
+  },  
+  spacer: { 
+    height: 50 
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '115%',
+    backgroundColor: '#F8F8F8',
+    alignItems: 'center', 
+    padding: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
+    flexDirection: 'row', // Organiza los botones en fila
+    justifyContent: 'space-between', // Distribuye los botones con espacio entre ellos
+  },
+  button: {
+    flex: 1, // Hace que los botones ocupen el mismo espacio
+    paddingVertical: 15,
+    borderRadius: 50,
+    alignItems: 'center',
+    borderColor:'#5D5791',
+    borderWidth:1,
+    backgroundColor: '#FFFFFF', // Color base
+    marginHorizontal: 5, // Espacio entre los botones
+  },
+  primaryButton: {
+    backgroundColor: '#5D5791', // Color diferente para botón principal
+  },
+  buttonText: {
+    color: '#5D5791',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonText1: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default PagoScreen;

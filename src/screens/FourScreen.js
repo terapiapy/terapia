@@ -12,7 +12,7 @@ const FourScreen = ({ navigation }) => {
           <SvgLogo style={styles.logov} />
           <Text style={styles.headerTexte}>erapia</Text>
         </View>
-        <Text style={styles.headerTexto}>Online</Text>
+        <Text style={styles.headerTexto}>online</Text>
       </View>
         <View style={styles.middleContent}>
           <Image source={require('../../assets/img4.png')} style={styles.imageI} />
@@ -44,46 +44,52 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center', // ✅ Centra los elementos
     justifyContent: 'center',
-    marginTop: 20,
+    margin: 30
   },
   logoTextContainer: {
+    marginTop:35,
     flexDirection: 'row', // ✅ Logo y "erapia" en la misma línea
     alignItems: 'center', // ✅ Alinear verticalmente
   },
   logov: {
     width: 74,
     height: 105,
-    marginRight: 8, // ✅ Espacio entre logo y texto
+    marginRight: -15, // ✅ Espacio entre logo y texto
   },
   headerTexte: {
+    marginTop:-15,
     color: '#5D5791',
     fontFamily: 'eurofurence',
-    fontSize: 36,
-    fontWeight: 'bold',
+    fontSize: 46,
+    fontWeight: '500',
+    fontStyle:'normal',
   },
   headerTexto: {
     color: '#E4DFFF',
     fontFamily: 'Roboto',
     fontSize: 24,
     fontWeight: '500',
-    marginTop: 4, // ✅ Espacio entre "erapia" y "Online"
+    marginTop: -35, // ✅ Espacio entre "erapia" y "Online"
+    marginLeft:125
   },
   middleContent: {
+    marginTop:5,
     flexDirection: 'row', // ✅ Alinea las imágenes en fila (horizontal)
     justifyContent: 'center', // ✅ Centra las imágenes en el eje horizontal
     alignItems: 'center', // ✅ Alinea las imágenes en el eje vertical
     marginVertical: 20, // Espaciado arriba y abajo
   },
   imageI: {
-    width: 150,
-    height: 150,
-    marginRight: 15, // ✅ Espacio entre las imágenes
+    width: 120,
+    height: 170,
+    marginRight: -50, // ✅ Espacio entre las imágenes
     borderColor: '#5D5791',
   },
   imageD: {
-    width: 150,
-    height: 150,
+    width: 130,
+    height: 170,
     marginRight:15,
+    marginTop:20,
     borderColor: '#5D5791',
   },
   content: {
@@ -92,11 +98,12 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     fontFamily: 'Roboto',
-    fontSize: 20,
+    fontSize: 27,
     fontWeight: '400',
+    fontStyle:'normal',
     lineHeight: 36,
     color: '#1C1B20',
-    marginTop: 30, 
+    marginTop: 5, 
     marginLeft:55,
   },
   parrafo: {
@@ -107,11 +114,13 @@ const styles = StyleSheet.create({
     fontStyle: 120,
     fontWeight: 400,
     lineHeight: 20,
-    letterSpacing: 0.25
+    letterSpacing: 0.25,
+    marginTop:15,
+    marginLeft:25
   },
   boton: {
         
-    margin: 60,
+    margin: 75,
     backgroundColor: '#5D5791',
     padding: 10,
     borderRadius: 20,

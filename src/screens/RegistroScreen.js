@@ -30,7 +30,7 @@ const RegistroScreen = ({ navigation }) => {
 
       if (response.ok) {
         Alert.alert('Éxito', 'Usuario registrado con éxito');
-        navigation.navigate('Código');
+        navigation.navigate('Código',{email});
       } else {
         Alert.alert('Error', data.error || 'No se pudo registrar el usuario');
       }
@@ -54,13 +54,13 @@ const RegistroScreen = ({ navigation }) => {
           <View style={styles.form}>
           <TextInput
               style={styles.input}
-              placeholder="Nombre de Usuario"
+              placeholder="Nombre"
               value={usuario}
               onChangeText={setUsuario}
             />
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder="Correo electrónico"
               value={email}
               onChangeText={setEmail}
             />
@@ -76,7 +76,7 @@ const RegistroScreen = ({ navigation }) => {
             <Text style={styles.botonText}>Continuar</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
-            <Text style={styles.link}>¿Tienes cuenta? Iniciar Sesión</Text>
+            <Text style={styles.link}>¿Tienes cuenta?  Iniciar Sesión</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -86,47 +86,66 @@ const RegistroScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: 375,
+    height: 812,
     backgroundColor: '#FFF',
-    paddingHorizontal: 20,
-    justifyContent: 'center',
   },
   header: {
-    alignItems: 'center',
-    marginBottom: 20,
+    alignItems: 'center', // ✅ Centra los elementos
+    justifyContent: 'center',
+    margin: 30
   },
   logoTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop:35,
+    flexDirection: 'row', // ✅ Logo y "erapia" en la misma línea
+    alignItems: 'center', // ✅ Alinear verticalmente
   },
   logov: {
     width: 74,
     height: 105,
-    marginRight: 8,
+    marginRight: -15, // ✅ Espacio entre logo y texto
   },
   headerTexte: {
+    marginTop:-15,
     color: '#5D5791',
-    fontSize: 36,
-    fontWeight: 'bold',
+    fontFamily: 'eurofurence',
+    fontSize: 46,
+    fontWeight: '500',
+    fontStyle:'normal',
   },
   headerTexto: {
     color: '#E4DFFF',
+    fontFamily: 'Roboto',
     fontSize: 24,
     fontWeight: '500',
+    marginTop: -35, // ✅ Espacio entre "erapia" y "Online"
+    marginLeft:125
   },
   content: {
     alignItems: 'center',
   },
   title: {
-    color: '#1C1B20',
+    textAlign: 'center',
+    fontFamily:'Roboto',
     fontSize: 28,
-    fontWeight: '500',
+    fontStyle:'normal',
+    fontWeight: '400',
+    lineHeight: 36,
+    color: '#5D5791'
   },
   parrafo: {
-    color: '#78767A',
-    fontSize: 14,
+    width:'80%',
+    marginTop:30,
+    marginBottom:30,
+    marginLeft:20,
     textAlign: 'center',
-    marginBottom: 10,
+    fontFamily:'Roboto',
+    fontSize: 16,
+    fontStyle: 'normal',
+    fontWeight: '400',
+    lineHeight: 20,
+    letterSpacing: 0.25,
+    color: '#78767A'
   },
   form: {
     width: '100%',
@@ -139,19 +158,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   link: {
     color: '#5D5791',
     textAlign: 'center',
-    marginVertical: 8,
-    textDecorationLine: 'underline',
+    marginTop:15,
+    textDecorationLine: 'none',
   },
   boton: {
     backgroundColor: '#5D5791',
+    marginTop:20,
     padding: 10,
     borderRadius: 20,
-    width: 199,
+    width: '80%',
     height: 40,
     justifyContent: 'center',
   },

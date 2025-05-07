@@ -58,6 +58,7 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
           <Image source={{ uri: therapist.foto }} style={styles.headerImage} />
           <View style={styles.headerTextContainer}>
             <Text style={styles.headerName}>{therapist.nombresespecialista} {"\n"}{therapist.apellidosespecialista}</Text>
+            <Text style={styles.cardSpecialty}>{therapist.especialidad}</Text>
           </View>
         </View>
 
@@ -65,24 +66,24 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Precio</Text>
-            <Text style={styles.cardValue}>Gs.{therapist.precio || 'N/A'}</Text>
+            <Text style={styles.cardValue}>Gs.{therapist.precio || 'N/A'}.000</Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Duración</Text>
-            <Text style={styles.cardValue}>{therapist.experiencia || '60'} minutos</Text>
+            <Text style={styles.cardValue}>{therapist.experiencia || '60'} min.</Text>
           </View>
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>Puntuación</Text>
+            <Text style={styles.cardTitle}>Rating</Text>
             <View style={styles.ratingContainer}>
-              <Text style={styles.cardValue}>{therapist.puntuacion || '4.5'}</Text>
-              <Ionicons name="star" size={20} color="#FFD700" />
+              <Text style={styles.cardValue}>{`${therapist.rating || '4.5'}/5`}</Text>
+              <Ionicons name="star" size={16} color="#FFD700" marginLeft="-13" />
             </View>
           </View>
         </View>
 
         {/* Especialidades */}
         <Text style={styles.sectionTitle}>Especialidades</Text>
-        <Text style={{ paddingHorizontal: 20 }}>{therapist.especialidad || 'Psicología Clínica'}</Text>
+        <Text style={ styles.espec }>{therapist.especialidad || 'Psicología Clínica'}</Text>
 
         {/* Biografía */}
         <Text style={styles.sectionTitle}>Biografía</Text>
@@ -90,29 +91,39 @@ const DetalleEspecialistaScreen = ({ route, navigation }) => {
 
         {/* Fechas disponibles dinámicas */}
         <View style={styles.availableDatesContainer}>
-          <Text style={styles.sectionTitle}>Fechas disponibles</Text>
+          <Text style={styles.sectionFecha}>Fechas disponibles</Text>
           <View style={styles.dateItem}>
             <TouchableOpacity onPress={() => navigation.navigate('Horario')}>
-              <Text style={styles.viewAll}>Ver todo</Text>
+              <Text style={styles.viewAll}></Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.buttonsContainer}>
-          {horarios.map((item, index) => (
-            <View key={index} style={{ marginBottom: 10 }}>
-              <Button
-                title={`${item.dia} ${item.fecha.slice(0, 2)}`}
-                onPress={() => setSelectedHorario(item)}
-              />
-              <Button
-                title={`${item.hora}`}
-                onPress={() => setSelectedHorario(item)}
-                color="#5D5791" // Puedes cambiar el color para diferenciar
-              />
-            </View>
-          ))}
+          {horarios.map((item, index) => {
+            const isSelected = selectedHorario?._id === item._id;
+
+            return (
+              <View key={index} style={styles.timeSlotsContainer}>
+                <TouchableOpacity
+                  style={[styles.timeSlot, isSelected && styles.selectedSlot]}
+                  onPress={() => setSelectedHorario(item)}
+                >
+                  <Text style={[styles.dayText, isSelected && styles.selectedText]}>{item.dia}</Text>
+                  <Text style={[styles.dateText, isSelected && styles.selectedText]}>{item.fecha.slice(0, 2)}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.timeSlot, isSelected && styles.selectedSlot]}
+                  onPress={() => setSelectedHorario(item)}
+                >
+                  <Text style={[styles.timeSlotText, isSelected && styles.selectedText]}>{`${item.hora}`}</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </View>
+
 
         
       </ScrollView>
@@ -150,68 +161,153 @@ const styles = StyleSheet.create({
   headerImage: { 
     width: 100,
     height: 100,
-    borderRadius: 50, 
-    marginRight: 15 },
+    borderRadius: 20, 
+    marginRight: 15 
+  },
   headerTextContainer: { 
-    justifyContent: 'center' },
+    justifyContent: 'center' 
+  },
   headerName: { 
-    fontSize: 24, 
-    fontWeight: 'bold' },
+    fontSize: 16, 
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    lineHeight: 24,
+    letterSpacing: 0.15,
+    fontWeight: '500' 
+  },
   cardContainer: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    paddingHorizontal: 20 },
+    paddingHorizontal: 20 
+  },
   card: { 
-    backgroundColor: '#fff', 
+    backgroundColor: '#fcf8ff', 
     padding: 10, 
     borderRadius: 8, 
-    width: '30%', 
+    width: '30%',
+    height: '100%', 
     alignItems: 'center' },
   cardTitle: { 
-    fontSize: 16, 
-    color: '#333' },
+    fontSize: 11,
+    fontFamily: 'Roboto',
+    fontStyle:'normal',
+    fontWeight: 500,
+    lineHeight:16,
+    letterSpacing: 0.5, 
+    color: '#787680',
+    textAlign: 'center' 
+  },
   cardValue: { 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    color: '#5D5791' },
-  ratingContainer: { flexDirection: 'row', alignItems: 'center' },
+    width: '100%',
+    fontFamily: 'Roboto',
+    fontSize: 14, 
+    fontStyle: 'normal',
+    fontWeight: 600,
+    lineHeight:16,
+    letterSpacing: 0.1, 
+    color: '#5D5791',
+    textAlign: 'center'
+  },
+  cardSpecialty:{
+    fontFamily: 'Roboto',
+    fontSize:12,
+    fontStyle: 'normal',
+    fontWeight: 600,
+    lineHeight:16,
+    letterSpacing:0.5
+  },
+  ratingContainer: { 
+    flexDirection: 'row', 
+    alignItems: 'center' 
+  },
   sectionTitle: { 
-    fontSize: 20, 
-    fontWeight: 'bold', 
-    marginVertical: 10, 
-    paddingHorizontal: 20 },
-  slider: { 
-    height: 150, 
-    marginHorizontal: 20 },
+    fontSize: 12, 
+    fontWeight: '400',
+    fontFamily: 'Roboto',
+    lineHeight: 16,
+    letterSpacing: 0.4, 
+    marginVertical: 10,
+    color: '#787680', 
+    paddingHorizontal: 20 
+  },
+  espec: {
+    width:'60%',
+    textAlign: 'center',
+    borderRadius: 8,
+    borderColor: '#47464F',
+    borderWidth:1,
+    padding: 3,
+    marginLeft:20,
+    fontFamily: 'Roboto',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 16,
+    letterSpacing:0.4
+  },
   bio: { 
-    fontSize: 16, 
+    fontSize: 16,
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 24,
+    letterSpacing: 0.5, 
     textAlign: 'justify', 
     paddingHorizontal: 20, 
-    marginBottom: 20 },
+    marginBottom: 20 
+  },
   availableDatesContainer: { 
-    paddingHorizontal: 20 },
+    paddingHorizontal: 20 
+  },
   dateItem: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    marginBottom: 10 },
+    marginBottom: 10 
+  },
+  sectionFecha: { 
+    fontSize: 16, 
+    fontWeight: '400',
+    fontFamily: 'Roboto',
+    lineHeight: 16,
+    letterSpacing: 0.4, 
+    color: '#5D5791'
+  },
   dateText: { 
-    fontSize: 16 },
-  viewAll: { 
-    color: '#5D5791' },
-  buttonsContainer: { 
-    paddingHorizontal: 20, 
-    marginBottom: 20 },
-  timeSlotsContainer: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    paddingHorizontal: 20, 
-    marginBottom: 20 },
-  timeSlot: { 
-    backgroundColor: '#5D5791', 
-    padding: 10, 
-    borderRadius: 8 },
-  timeSlotText: { 
-    color: 'white' },
+    fontSize: 16 
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 10,
+    marginTop:-20
+  },
+  timeSlotsContainer: {
+    margin: 5,
+    alignItems: 'center',
+  },
+  timeSlot: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginBottom: 5,
+    backgroundColor: '#fff',
+    minWidth: 70,
+    alignItems: 'center',
+  },
+  timeSlotText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  selectedSlot: {
+    backgroundColor: '#E4DFFF',
+    borderColor: '#47464F',
+  },
+  selectedText: {
+    color: '#000',
+  },
   footer: {
     position: 'absolute',
     bottom: 0,
@@ -223,14 +319,22 @@ const styles = StyleSheet.create({
     borderTopColor: '#ccc',
   },
   bookButton: { 
+    width:'100%',
     backgroundColor: '#5D5791',
-     paddingVertical: 15,
-      paddingHorizontal: 30,
-       borderRadius: 8 },
-  bookButtonText: { 
-    color: 'white', 
-    fontSize: 18,
-    fontWeight: 'bold' },
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius:50  
+  },
+  bookButtonText: {
+    textAlign: 'center', 
+    color: '#FFFFFF', 
+    fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    lineHeight: 20,
+    letterSpacing:0.1 
+  },
     loaderContainer: {
       flex: 1,
       justifyContent: 'center',

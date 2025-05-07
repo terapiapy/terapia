@@ -10,29 +10,31 @@ const CuentaScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-          <TouchableOpacity style={styles.button} onPress= {() =>navigation.navigate('Políticas de Privacidad')}>
-              <Ionicons name="person-outline" size={20} color="black" />
+      <View style={styles.box}>
+      <TouchableOpacity style={styles.button} onPress= {() =>navigation.navigate('Políticas de Privacidad')}>
+              <Ionicons name="shield-checkmark" size={20} color="black" />
               <Text style={styles.buttonText}>Políticas de Privacidad</Text>
-              <Ionicons name="arrow-forward" size={20} color="black" />
+              <Ionicons name="play" size={20} color="black" />
             </TouchableOpacity>
       
             <TouchableOpacity style={styles.button } onPress= {() =>navigation.navigate('Términos y Condiciones')}>
-              <Ionicons name="card" size={20} color="black" />
+              <Ionicons name="document-text" size={20} color="black" />
               <Text style={styles.buttonText}>Términos y servicios</Text>
-              <Ionicons name="arrow-forward" size={20} color="black" />
+              <Ionicons name="play" size={20} color="black" />
             </TouchableOpacity>
       
             <TouchableOpacity style={styles.button} onPress= {() =>navigation.navigate('olvido')}>
-              <Ionicons name="cash" size={20} color="black" />
+              <Ionicons name="pencil" size={20} color="black" />
               <Text style={styles.buttonText}>Cambiar Contraseña</Text>
-              <Ionicons name="arrow-forward" size={20} color="black" />
+              <Ionicons name="play" size={20} color="black" />
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button}>
-              <Ionicons name="cash" size={20} color="black" />
+              <Ionicons name="trash" size={20} color="black" />
               <Text style={styles.buttonText}>Eliminar</Text>
-              <Ionicons name="arrow-forward" size={20} color="black" />
+              <Ionicons name="play" size={20} color="black" />
             </TouchableOpacity>
+      </View>  
     </View>
   );
 };
@@ -52,20 +54,28 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+    
+  },
+  box:{
+    marginTop: 15
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  icon: {
-    marginRight: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+    justifyContent: 'space-between',
   },
   buttonText: {
-    flex: 1,
     fontSize: 16,
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 24,
+    letterSpacing: 0.5,
+    marginLeft: 10,
+    flex: 1,
   },
 });
 

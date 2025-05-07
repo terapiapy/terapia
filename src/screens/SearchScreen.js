@@ -56,7 +56,7 @@ const SearchScreen = ({ navigation }) => {
               <Text style={styles.cardName}>{item.nombresespecialista}</Text>
               <Text style={styles.cardName}>{item.apellidosespecialista}</Text>
               <Text style={styles.cardSpecialty}>{item.especialidad}</Text>
-              <Text style={styles.cardPrice}>Precio: ${item.precio}</Text>
+              <Text style={styles.cardPrice}>Gs. {item.precio}.000</Text>
             </View>
             <View style={styles.cardRatingContainer}>
               <Text style={styles.cardRating}>{item.rating}</Text>
@@ -123,12 +123,12 @@ const styles = StyleSheet.create({
   },
   cardSpecialty: {
     fontSize: 16,
-    color: '#5D5791',
+    color: '#787680',
     marginBottom: 2,
   },
   cardPrice: {
     fontSize: 16,
-    color: '#333',
+    color: '#5D5791',
     marginBottom: 5,
   },
   cardRatingContainer: {

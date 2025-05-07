@@ -19,9 +19,9 @@ const MainScreen = ({ navigation }) => {
               Descubre una amplia variedad de terapeutas con 
               diversas especialidades y enfoques terapéuticos. 
             </Text>
-            <ProgressBar progress={0.33}  style={styles.progressBar} />
+            <ProgressBar progress={0.3}  style={styles.progressBar} />
             <TouchableOpacity style={styles.boton} onPress={() => navigation.navigate('SecondScreen')}>
-              <Text style={styles.botonText}>Continuar</Text>
+              <Text style={styles.botonText}>Siguiente</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -45,12 +45,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    padding: 16,
+    padding: 20,
   },
   title: {
     textAlign: 'center',
     fontFamily: 'Roboto',
-    fontSize: 25,
+    fontSize: 28,
+    fontStyle:'normal',
     fontWeight: '400',
     lineHeight: 36,
     color: '#1C1B20',
@@ -61,19 +62,19 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     fontFamily: 'Roboto',
     fontSize: 14,
+    fontStyle: 'normal',
     fontWeight: '400',
     lineHeight: 20,
     letterSpacing: 0.25,
     color: '#78767A',
-    marginBottom: 25,
-    marginTop:5
+    marginBottom: 30,
+    marginTop:30
   },
   progressBar: {
     marginVertical:0, // Ajusta el espacio según sea necesario
     color: '#5D5791',
   },
   boton: {
-    
     margin: 60,
     backgroundColor: '#5D5791',
     padding: 10,
@@ -83,7 +84,12 @@ const styles = StyleSheet.create({
   },
   botonText: {
     color: '#fff',
-    fontSize: 16,
+    fontFamily:'Roboto',
+    fontSize: 14,
+    fontStyle:'normal',
+    fontWeight:'500',
+    lineHeight: 20,
+    letterSpacing: 0.1,
     textAlign: 'center',
   },
 });

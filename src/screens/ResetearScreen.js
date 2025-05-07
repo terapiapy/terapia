@@ -13,7 +13,7 @@ import SvgLogo from '../../assets/logo.svg'; // Asegúrate de importar correctam
       <SafeAreaView style={styles.container}>
       <View style={styles.content}>
           <Text style={styles.title}>
-            Datos personales
+            Nueva Contraseña
           </Text>
           <Text style={styles.parrafo}>
             Ingresa tu nueva contraseña
@@ -35,7 +35,7 @@ import SvgLogo from '../../assets/logo.svg'; // Asegúrate de importar correctam
            
           </View>
           <TouchableOpacity style={styles.boton} onPress={() => navigation.navigate('LoginScreen')}>
-            <Text style={styles.botonText}>Guardar</Text>
+            <Text style={styles.botonText}>Cambiar</Text>
           </TouchableOpacity>
       </View>
       </SafeAreaView>
@@ -49,46 +49,23 @@ const styles = StyleSheet.create({
     height: 812,
     backgroundColor: '#FFF',
   },
-  header: {
-    alignItems: 'center', // ✅ Centra los elementos
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  logoTextContainer: {
-    flexDirection: 'row', // ✅ Logo y "erapia" en la misma línea
-    alignItems: 'center', // ✅ Alinear verticalmente
-  },
-  logov: {
-    width: 74,
-    height: 105,
-    marginRight: 8, // ✅ Espacio entre logo y texto
-  },
-  headerTexte: {
-    color: '#5D5791',
-    fontFamily: 'eurofurence',
-    fontSize: 36,
-    fontWeight: 'bold',
-  },
-  headerTexto: {
-    color: '#E4DFFF',
-    fontFamily: 'Roboto',
-    fontSize: 24,
-    fontWeight: '500',
-    marginTop: 4, // ✅ Espacio entre "erapia" y "Online"
-  },
   content: {
+    margin:30,
+    marginTop:40,
     width: 313
   },
   title: {
-    color: '#1C1B20',
+    color: '#5D5791',
     textAlign: 'center',
     fontFamily: 'Roboto',
     fontSize: 28,
-    fontStyle: '500',
+    fontStyle: 'normal',
     fontWeight: 400,
     lineHeight: 36
   },
   parrafo: {
+    marginTop:35,
+    marginBottom:30,
     color: '#78767A',
     textAlign: 'center',
     fontFamily: 'Roboto',
@@ -104,26 +81,27 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    width: '100%',
+    width: '90%',
     height: 45,
     borderColor: '#5D5791',
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    margin: 20,
+    marginBottom:0
   },
   link: {
     color: '#5D5791',
     textAlign: 'center',
-    marginVertical: 8,
     textDecorationLine: 'underline',
   },
   boton: {
-    margin: 60,
+    margin: 20,
+    marginTop: 40,
     backgroundColor: '#5D5791',
     padding: 10,
     borderRadius: 20,
-    width: 199,
+    width: '85%',
     height: 40,
   },
   botonText: {

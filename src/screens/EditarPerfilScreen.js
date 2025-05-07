@@ -1,19 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { AuthContext } from '../../context/AuthContext';
 
 const EditarPerfilScreen = () => {
-  const [cedula, setCedula] = useState('');
-  const [nombres, setNombres] = useState('');
-  const [apellidos, setApellidos] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
-  const [sexo, setSexo] = useState('');
-  const [correo, setCorreo] = useState('');
+  const { user } = useContext(AuthContext); // Contexto del usuario
+  const [cedula, setCedula] = useState(user.cedula || '');
+  const [nombres, setNombres] = useState(user.nombre || '');
+  const [apellidos, setApellidos] = useState(user.apellido || '');
+  const [fechaNacimiento, setFechaNacimiento] = useState(user.fechanacimiento || '');
+  const [sexo, setSexo] = useState(user.sexo || '');
+  const [correo, setCorreo] = useState(user.email || '');
 
-  const handleGuardar = () => {
-    // Aquí puedes manejar la lógica para guardar los datos
-    console.log({ cedula, nombres, apellidos, fechaNacimiento, sexo, correo });
+
+  const handleGuardar = async () => {
+    try {
+      const response = await fetch(`https://apisterapia.onrender.com/api/usuarios/update/${user._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cedula,
+          nombres,
+          apellidos,
+          fechanacimiento: fechaNacimiento,
+          sexo,
+          email: correo,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        alert('Perfil actualizado correctamente');
+      } else {
+        alert(`Error al actualizar: ${data.error || 'Intenta de nuevo'}`);
+      }
+    } catch (error) {
+      console.error('Error de red:', error);
+      alert('Hubo un error al actualizar el perfil.');
+    }
   };
+  
 
   return (
     <View style={styles.container}>
@@ -53,7 +82,6 @@ const EditarPerfilScreen = () => {
           style={styles.input}
           value={fechaNacimiento}
           onChangeText={setFechaNacimiento}
-          placeholder="YYYY-MM-DD"
         />
       </View>
 
@@ -61,10 +89,9 @@ const EditarPerfilScreen = () => {
         <Text style={styles.label}>Sexo</Text>
         <View style={styles.pickerContainer}>
           <Picker selectedValue={sexo} onValueChange={(itemValue) => setSexo(itemValue)}>
-            <Picker.Item label="Seleccione su sexo" value="" />
-            <Picker.Item label="Masculino" value="Masculino" />
-            <Picker.Item label="Femenino" value="Femenino" />
-            <Picker.Item label="Otro" value="Otro" />
+            <Picker.Item label={sexo} value={sexo} />
+            <Picker.Item label="Masculino" value="M" />
+            <Picker.Item label="Femenino" value="F" />
           </Picker>
         </View>
       </View>
@@ -78,10 +105,15 @@ const EditarPerfilScreen = () => {
           keyboardType="email-address"
         />
       </View>
-
-      <TouchableOpacity style={styles.button} onPress={handleGuardar}>
-        <Text style={styles.buttonText}>Guardar</Text>
-      </TouchableOpacity>
+      <View style={styles.footer}>
+        <TouchableOpacity 
+          style={styles.bookButton} 
+          onPress={handleGuardar}
+        >
+        <Text style={styles.bookButtonText}>Guardar</Text>
+        </TouchableOpacity>
+            
+      </View>
     </View>
   );
 };
@@ -93,41 +125,70 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   title: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: 500,
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    lineHeight: 24,
+    letterSpacing: 0.15,
     marginBottom: 20,
     textAlign: 'left',
+    color: '#5D5791'
   },
   inputContainer: {
-    marginBottom: 15,
+    marginBottom: 8,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
+    fontFamily: 'Roboto',
+    fontWeight:400,
+    fontStyle: 'normal',
+    lineHeight:24,
+    letterSpacing:0.15,
     color: '#666',
-    marginBottom: 5,
+    marginBottom: 2,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
+    padding: 5,
+    fontSize: 14,
+    fontFamily: 'Roboto',
+    fontWeight:400,
+    fontStyle: 'normal'
   },
   pickerContainer: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
   },
-  button: {
-    marginTop: 20,
-    backgroundColor: '#5D5791',
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '115%',
+    backgroundColor: '#F8F8F8',
+    alignItems: 'center', 
     padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#ccc',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
+  bookButton: { 
+    width:'90%',
+    backgroundColor: '#5D5791',
+    margin: 10, 
+    padding:15,
+    borderRadius:50  
+  },
+  bookButtonText: {
+    textAlign: 'center', 
+    color: '#FFFFFF', 
+    fontSize: 14,
+    fontWeight: '500',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    lineHeight: 20,
+    letterSpacing:0.1 
   },
 });
 

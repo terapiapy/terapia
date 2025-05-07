@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 const HomeScreen = ({ navigation }) => {
@@ -96,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.header}>
         <Image source={user.foto ? { uri: user.foto } : require('../../assets/avatar.png')} style={styles.avatar} />
         <View>
-          <Text style={styles.userName}>Hola, {user.nombreusuario} {user.apellido}!</Text>
+          <Text style={styles.userName}>Hola, {user.nombre}!</Text>
           <Text style={styles.welcomeText}>Bienvenido a tu espacio terapia online.</Text>
         </View>
       </View>
@@ -140,8 +140,8 @@ const HomeScreen = ({ navigation }) => {
               <View style={styles.cardInfo}>
                 <Text style={styles.cardName}>{item.name}</Text>
                 <Text style={styles.cardName}>{item.lastname}</Text>
-                <Text style={styles.cardSpecialty}>{item.specialty}</Text>
-                <Text style={styles.cardPrice}>{item.date} - {item.time}</Text>
+                <Text style={styles.cardSpecialty}>{item.specialty.substring(16)}</Text>
+                <Text style={styles.cardPrice}>📅 {item.date}   ⏰{item.time}</Text>
               </View>
               <View style={styles.cardRatingContainer}>
                 <Text style={styles.cardRating}>{item.rating}</Text>
@@ -160,7 +160,7 @@ const HomeScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('Detalle', { therapyId: item.id })} // Pasar el ID de la terapia
+            onPress={() => navigation.navigate('Enfoque de terapia', { therapyId: item.id })} // Pasar el ID de la terapia
             style={styles.therapyCard}
           >
             <Image source={item.image} style={styles.therapyIcon} />
@@ -175,13 +175,13 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: '#fff', 
-    padding: 20 
+
   },
   header: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    marginTop:18,
-    marginBottom: 20 
+    margin: 20,
+    marginTop: 60 
   },
   avatar: { 
     width: 50, 
@@ -192,10 +192,18 @@ const styles = StyleSheet.create({
   userName: { 
     fontSize: 16, 
     fontWeight: '500',
-    color: '#5D5791' 
+    color: '#5D5791',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    lineHeight: 24,
+    letterSpacing: 0.15 
   },
-  welcomeText: { 
-    fontSize: 12, 
+  welcomeText: {
+    fontFamily:'Roboto',  
+    fontSize: 14,
+    fontStyle: 'normal',
+    lineHeight: 20,
+    letterSpacing:0.25, 
     color: '#78767A',
     fontWeight:'400' 
   },
@@ -204,38 +212,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'center', 
     backgroundColor: '#FCF8FF', 
-    borderColor: '#C9C5D0',
+    borderColor: '#47464F' ,
+    borderWidth:1,
     padding: 15, 
     borderRadius: 12, 
-    marginBottom: 17 
+    marginTop:0,
+    margin: 17 
   },
   bannerText: { 
     flex: 1, 
-    fontSize: 16,
+    fontFamily: 'Roboto',
+    fontSize: 20,
     fontWeight: 400,
+    fontStyle: 'normal',
+    lineHeight: 26,
     color: '#47464F',
-    alignItems: 'left'
+    marginRight:-50
   },
   bannerImage: { 
-    width: 75, 
-    height: 85 
+    width: 190, 
+    height: 171,
+    marginRight:-8 
   },
   sectionTitle: {
     color: '#5D5791', 
     fontSize: 22, 
     fontWeight: '400', 
-    marginVertical: 10.
-
+    marginTop:0,
+    margin: 17
   },
   card: {
     flexDirection: 'row',
-    marginBottom: 15,
+    margin: 15,
+    marginTop:0,
     borderWidth: 1,
     borderColor: '#5D5791',
     borderRadius: 8,
     padding: 10,
     alignItems: 'center', 
-    backgroundColor: '#E4DFFF', 
+    backgroundColor: '#E4DFFF'
   },
   noSessionsText: {
     fontSize: 18,
@@ -246,7 +261,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#007BFF',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 5
   },
   searchButtonText: {
     color: '#fff',
@@ -259,8 +274,9 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: 60,
-    height: 60,
-    borderRadius: 40,
+    height: 70,
+    borderRadius: 4,
+    marginTop:-30
   },
   cardInfo: {
     width:'60%',
@@ -269,23 +285,31 @@ const styles = StyleSheet.create({
   cardName: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 2, // Agrega un poco de espacio entre el nombre y la especialidad
+    marginBottom: 2
   },
   cardSpecialty: {
     width:'60%',
     fontSize: 16,
     color: '#5D5791',
-    marginBottom: 2, // Agrega espacio para que no se vea amontonado
+    marginBottom: 2 
   },
   cardPrice: {
     fontSize: 16,
     color: '#333',
-    marginBottom: 2, // Espacio entre el precio y la puntuación
+    marginLeft: -69, 
+    marginTop: 10,
+    padding:5,
+    borderRadius: 8, 
+    backgroundColor: '#FFF'
   },
   cardRatingContainer: {
     flexDirection: 'row',
     alignItems: 'center', // Alinea el icono de la estrella y la puntuación
-    marginBottom: 68,
+    marginTop: -79,
+    marginLeft: 49,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    padding: 5
   },
   cardRating: {
     fontSize: 18,
@@ -298,8 +322,8 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   therapyIcon: { 
-    width: 93, 
-    height: 93, 
+    width: 75, 
+    height: 75, 
     borderRadius: 25 
   },
   therapyTitle: { 

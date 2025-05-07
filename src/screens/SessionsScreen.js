@@ -23,7 +23,7 @@ const SessionsScreen = () => {
             id: item._id,
             date: formattedDate,
             time: item.idreserva.idhorario.hora,
-            duration: '1 hora',
+            duration:`${item.idreserva.idespecialista.experiencia} minutos ` ,
             price: `${item.idreserva.monto}$`,
             therapistName: `${item.idreserva.idespecialista.nombresespecialista} ${item.idreserva.idespecialista.apellidosespecialista}`,
             therapistImage: item.idreserva.idespecialista.foto ? { uri: item.idreserva.idespecialista.foto } : require('../../assets/avatar1.png'),

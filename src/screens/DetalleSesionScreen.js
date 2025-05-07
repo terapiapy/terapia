@@ -60,28 +60,30 @@ const DetalleSesionScreen = ({ route, navigation }) => {
           style={styles.therapistImage}
         />
         <Text style={styles.therapistName}>
-          {especialista?.nombresespecialista} {"\n"}{especialista?.apellidosespecialista}
+          {especialista?.nombresespecialista}{"\n"}{especialista?.apellidosespecialista}
         </Text>
+         <Text style={ styles.espec }>{especialista.especialidad || 'Psicología Clínica'}</Text>
       </View>
 
       {/* Descripción */}
-      <Text style={styles.description}>Tu cita está programada. Revisa los detalles a continuación.</Text>
+      <Text style={styles.description}>La sala de espera virtual se habilitará
+      5 minutos antes de la consulta</Text>
 
       {/* Información de la Cita */}
       <Text style={styles.sectionTitle}>Información de la Cita</Text>
       <View style={styles.card}>
-        <Text style={styles.cardText}>📅 Fecha: {horario?.fecha}</Text>
-        <Text style={styles.cardText}>⏰ Hora: {horario?.hora}</Text>
-        <Text style={styles.cardText}>⏳ Duración: 1 hora</Text>
-        <Text style={styles.cardText}>💰 Precio: ${sesion.idreserva?.monto}</Text>
-        <Text style={styles.cardText}>🖥️ Modalidad: Online</Text>
-        <Text style={styles.cardText}>💳 Forma de Pago: {sesion.idreserva?.metodopago}</Text>
+        <Text style={styles.cardText}>Fecha: {horario?.fecha}</Text>
+        <Text style={styles.cardText}>Hora: {horario?.hora}</Text>
+        <Text style={styles.cardText}>Duración: {especialista?.experiencia} minutos</Text>
+        <Text style={styles.cardText}>Precio: ${sesion.idreserva?.monto}</Text>
+        <Text style={styles.cardText}>Modalidad: Online</Text>
+        <Text style={styles.cardText}>Forma de Pago: {sesion.idreserva?.metodopago}</Text>
       </View>
 
       {/* Botón para entrar a la sesión */}
       <TouchableOpacity
         style={styles.enterButton}
-        onPress={() => navigation.navigate('Final Sesión')}
+        onPress={() => navigation.navigate('Final Sesión', {idsesion})}
       >
         <Text style={styles.enterButtonText}>Entrar</Text>
       </TouchableOpacity>
@@ -107,30 +109,57 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   therapistImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    marginRight: 15,
+    width: 100,
+    height: 100,
+    borderRadius: 20, 
+    marginRight: 15 
   },
   therapistName: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: 500,
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    lineHeight: 24,
+    letterSpacing: 0.15
+  },
+  espec: {
+    fontFamily: 'Roboto',
+    fontSize: 12,
+    fontStyle: 'normal',
+    fontWeight: 400,
+    lineHeight: 16,
+    letterSpacing:0.4,
+    marginLeft: -115,
+    marginTop: 80
   },
   description: {
     textAlign: 'center',
     fontSize: 16,
     marginBottom: 20,
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    lineHeight: 24,
+    letterSpacing: 0.15,
+    color: '#563A70'
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: 500,
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    lineHeight:24,
+    letterSpacing: 0.15,
     marginBottom: 10,
+    color: '#5D5791'
   },
   card: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#FCF8FF',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
+    borderColor: '#E4DFFF',
+    borderWidth: 1
   },
   cardText: {
     fontSize: 16,
@@ -145,8 +174,12 @@ const styles = StyleSheet.create({
   },
   enterButtonText: {
     color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: 500,
+    fontFamily: 'Roboto',
+    fontStyle:'normal',
+    lineHeight: 20,
+    letterSpacing: 0.1
   },
   cancelButton: {
     backgroundColor: '#FCF8FF',
@@ -158,8 +191,12 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     color: '#5D5791',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: 500,
+    fontFamily: 'Roboto',
+    fontStyle:'normal',
+    lineHeight: 20,
+    letterSpacing: 0.1
   },
 });
 

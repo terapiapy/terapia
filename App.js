@@ -20,6 +20,7 @@ import HorarioScreen from './src/screens/HorarioScreen';
 import ReservaScreen from './src/screens/ReservaScreen';
 import PagoScreen from './src/screens/PagoScreen';
 import DetalleSesionScreen from './src/screens/DetalleSesionScreen';
+//import SalaScreen from './src/screens/SalaScreen';
 import FinalSesionScreen from './src/screens/FinalSesionScreen';
 import ResenaScreen from './src/screens/ResenaScreen';
 import ResumenSesionScreen from './src/screens/ResumenSesionScreen';
@@ -73,17 +74,17 @@ const App = () => {
             options={{ headerShown: true }} 
           />
           <Stack.Screen 
-            name="Completar" 
+            name="Mis Datos" 
             component={CompletarScreen} 
             options={{ headerShown: true }} 
           />
           <Stack.Screen 
-            name="Olvido" 
+            name="Olvide mi contraseña" 
             component={OlvidoScreen} 
             options={{ headerShown: true }} 
           />
           <Stack.Screen 
-            name="Confirmar" 
+            name="Codigo de verificación" 
             component={ConfirmarScreen} 
             options={{ headerShown: true }} 
           />
@@ -98,7 +99,7 @@ const App = () => {
             options={{ headerShown: false }} 
           />
           <Stack.Screen 
-            name="Detalle" 
+            name="Enfoque de terapia" 
             component={DetalleScreen} 
             options={{ headerShown: true }} 
           />
@@ -127,7 +128,7 @@ const App = () => {
             component={DetalleSesionScreen} 
             options={{ headerShown: true }} 
           />
-        <Stack.Screen 
+          <Stack.Screen 
             name="Final Sesión" 
             component={FinalSesionScreen} 
             options={{ headerShown: true }} 
