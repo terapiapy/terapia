@@ -1,10 +1,15 @@
 {
   "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": ["react-native-element-dropdown"]
+      }
+    },
     "name": "terapia",
     "slug": "terapia",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/Group4.png",
+    "icon": "./assets/splash-icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": false,
     "splash": {
@@ -17,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/Group4.png",
+        "foregroundImage": "./assets/splash-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.terapia.mobile"
